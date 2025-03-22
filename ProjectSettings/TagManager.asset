@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Tilemaps
+    uniqueID: 2478632185
+    locked: 0
+  - name: SelectionBox
+    uniqueID: 2651523819
+    locked: 0

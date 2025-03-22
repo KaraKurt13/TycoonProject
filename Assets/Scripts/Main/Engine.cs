@@ -21,6 +21,8 @@ namespace Assets.Scripts.Main
 
         public SelectionBox SelectionBox;
 
+        public Dictionary<Vector3Int, GameTile> Tiles = new();
+
         private void Start()
         {
             InitializeTerrain();
@@ -35,16 +37,28 @@ namespace Assets.Scripts.Main
             {
                 if (hit.collider.TryGetComponent<BuildingTerritory>(out var territory))
                 {
-                    SelectionBox.SetSelection(territory.Center, territory.Width, territory.Height);
+                    if (!territory.IsUnlocked)
+                    {
+                        SelectionBox.SetSelection(territory.Center, territory.Width + 1, territory.Height + 1);
+                        if (Input.GetMouseButtonDown(0))
+                            ExpandTerritory(territory);
+                    }
+                    else
+                    {
+                        if (Input.GetMouseButtonDown(0))
+                        {
+                            Vector3Int cellPosition = BuildingTilemap.WorldToCell(hit.point);
+                            if (Tiles.TryGetValue(cellPosition, out var tile))
+                            {
+                                SelectionBox.SetSelection(tile.Center, 1, 1);
+                            }
+                        }
+                    }
                 }
             }
             else
                 SelectionBox.ClearSelection();
-        }
-
-        public void CreateBuilding()
-        {
-
+  
         }
 
         public void ExpandTerritory(BuildingTerritory territory)
@@ -56,7 +70,7 @@ namespace Assets.Scripts.Main
             foreach (var tile in territory.RelatedTiles)
             {
                 tile.IsUnlocked = true;
-                tilePositions[index] = new Vector3Int(tile.X, tile.Y, 0);
+                tilePositions[index] = tile.CellPosition;
                 tileBases[index] = TileBase;
                 index++;
             }
@@ -76,20 +90,19 @@ namespace Assets.Scripts.Main
                 int endX = center.x + width / 2;
                 int startY = center.y - height / 2;
                 int endY = center.y + height / 2;
-
                 int totalTiles = (width + 1) * (height + 1);
-                Vector3Int[] positions = new Vector3Int[totalTiles];
+                var tileCenterOffset = new Vector3(0.5f, 0, 0.5f);
 
-                int index = 0;
                 for (int x = startX; x <= endX; x++)
                 {
                     for (int y = startY; y <= endY; y++)
                     {
-                        var tile = new GameTile();
-                        tile.X = x;
-                        tile.Y = y;
+                        var cellPosition = new Vector3Int(x, y, 0);
+                        var tileCenter = BuildingTilemap.CellToWorld(cellPosition) + tileCenterOffset;
+                        var tile = new GameTile(cellPosition, tileCenter);
+
                         territory.RelatedTiles.Add(tile);
-                        index++;
+                        Tiles.Add(cellPosition, tile);
                     }
                 }
             }

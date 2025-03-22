@@ -6,8 +6,16 @@ namespace Assets.Scripts.Terrain
 {
     public class GameTile
     {
-        public int X, Y;
+        public Vector3Int CellPosition;
+
+        public Vector3 Center;
 
         public bool IsUnlocked = false;
+
+        public GameTile(Vector3Int cell, Vector3 center)
+        {
+            CellPosition = cell;
+            Center = center;
+        }
     }
 }

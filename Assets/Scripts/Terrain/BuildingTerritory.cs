@@ -19,7 +19,6 @@ namespace Assets.Scripts.Terrain
         public void Unlock()
         {
             IsUnlocked = true;
-            gameObject.SetActive(false);
         }
 
         private void Start()

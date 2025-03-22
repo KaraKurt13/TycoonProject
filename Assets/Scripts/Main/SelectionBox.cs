@@ -11,8 +11,7 @@ namespace Assets.Scripts.Main
         public void SetSelection(Vector3 position, int width, int height)
         {
             transform.position = position;
-            SpriteRenderer.size = new Vector2(width + 1, height + 1);
-            Debug.Log(SpriteRenderer.size);
+            SpriteRenderer.size = new Vector2(width, height);
             gameObject.SetActive(true);
         }
 
