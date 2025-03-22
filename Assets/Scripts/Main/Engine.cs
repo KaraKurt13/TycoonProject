@@ -1,3 +1,4 @@
+using Assets.Scripts.Objects;
 using Assets.Scripts.Terrain;
 using System;
 using System.Collections;
@@ -14,6 +15,15 @@ namespace Assets.Scripts.Main
         public GameTerrain Terrain;
 
         public SelectionBox SelectionBox;
+
+        [SerializeField] private GameObject _buildingPrefab;
+
+        public Building CreateBuilding(GameTile centerTile)
+        {
+            var building = Instantiate(_buildingPrefab, centerTile.Center, Quaternion.identity).GetComponent<Building>();
+            centerTile.Building = building;
+            return building;
+        }
 
         private void Start()
         {

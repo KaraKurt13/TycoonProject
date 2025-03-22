@@ -59,11 +59,14 @@ namespace Assets.Scripts.Terrain
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public GameTile GetTile(int x, int y)
+        public GameTile GetTile(int x, int y, bool onlyUnlocked = false)
         {
             var cellPosition = new Vector3Int(x, y, 0);
             if (_tiles.TryGetValue(cellPosition, out var tile))
-                return tile;
+            {
+                if (onlyUnlocked)
+                    return tile.IsUnlocked ? tile : null;
+            }
 
             return null;
         }
@@ -72,10 +75,10 @@ namespace Assets.Scripts.Terrain
         /// Returns a tile by world position
         /// </summary>
         /// <param name="worldPosition"></param>
-        public GameTile GetTile(Vector3 worldPosition)
+        public GameTile GetTile(Vector3 worldPosition, bool onlyUnlocked = false)
         {
             var cellPosition = BuildingTilemap.WorldToCell(worldPosition);
-            return GetTile(cellPosition.x, cellPosition.y);
+            return GetTile(cellPosition.x, cellPosition.y, onlyUnlocked);
         }
 
         public void ExpandTerritory(BuildingTerritory territory)
