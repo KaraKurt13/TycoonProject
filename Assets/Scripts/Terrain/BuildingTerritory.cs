@@ -8,6 +8,8 @@ namespace Assets.Scripts.Terrain
     {
         public int Width, Height;
 
+        public Vector3 Center;
+
         public BoxCollider SelectionCollider;
 
         public bool IsUnlocked = false;
@@ -23,6 +25,7 @@ namespace Assets.Scripts.Terrain
         private void Start()
         {
             SelectionCollider.size = new Vector3(Width + 1, 1, Height + 1);
+            Center = transform.position;
         }
     }
 }

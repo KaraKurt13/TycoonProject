@@ -19,10 +19,27 @@ namespace Assets.Scripts.Main
 
         public TileBase TileBase;
 
+        public SelectionBox SelectionBox;
+
         private void Start()
         {
             InitializeTerrain();
             ExpandTerritory(InitialTerritory);
+        }
+
+        private void Update()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.TryGetComponent<BuildingTerritory>(out var territory))
+                {
+                    SelectionBox.SetSelection(territory.Center, territory.Width, territory.Height);
+                }
+            }
+            else
+                SelectionBox.ClearSelection();
         }
 
         public void CreateBuilding()
