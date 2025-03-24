@@ -3,6 +3,7 @@ using Assets.Scripts.Terrain;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.EditorGUI;
 
 namespace Assets.Scripts.Objects
 {
@@ -22,10 +23,18 @@ namespace Assets.Scripts.Objects
 
         public void Initialize()
         {
-            var propertyTemplate = Type.PropertyTemplate;
+            if (Type.PropertyTemplate != null)
+            {
+                var propertyCopy = SystemExtensions.Clone(Type.PropertyTemplate);
+                propertyCopy.Building = this;
+                propertyCopy.Initialize();
+                Property = propertyCopy;
+            }
+        }
 
-            if (propertyTemplate == null)
-                return;
+        public void Tick()
+        {
+            Property?.Tick();
         }
     }
 }

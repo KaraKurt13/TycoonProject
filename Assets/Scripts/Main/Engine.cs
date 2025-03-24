@@ -20,13 +20,19 @@ namespace Assets.Scripts.Main
 
         public StoreManager StoreManager;
 
-        [SerializeField] private GameObject _buildingPrefab;
-
-        public Building CreateBuilding(GameTile centerTile)
+        public Building CreateBuilding(GameTile centerTile, BuildingTypeEnum type)
         {
-            var building = Instantiate(_buildingPrefab, centerTile.Center, Quaternion.identity).GetComponent<Building>();
+            if (type == BuildingTypeEnum.None)
+                return null;
+
+            var buildingCenter = Terrain.GetTilesCenter(centerTile, type, OrientationEnum.E);
+            var buildingType = DataLibrary.BuildingTypes[type];
+            var building = Instantiate(buildingType.Prefab, buildingCenter, Quaternion.identity).GetComponent<Building>();
+            building.Engine = this;
+            building.Type = buildingType;
             centerTile.Building = building;
             StoreManager.Buildings.Add(building);
+            building.Initialize();
             return building;
         }
 

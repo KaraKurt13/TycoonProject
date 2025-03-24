@@ -1,4 +1,5 @@
 using Assets.Scripts.Main;
+using Assets.Scripts.Objects;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +76,7 @@ namespace Assets.Scripts.Terrain
 
                 if (tile.LeftEdge == null)
                 {
-                    var leftTile = GetTile(tile.CellPosition.x -1, tile.CellPosition.y);
+                    var leftTile = GetTile(tile.CellPosition.x - 1, tile.CellPosition.y);
                     var leftEdge = new TileEdge(tile, leftTile, EdgeOrientationEnum.Horizontal);
                     tile.LeftEdge = leftEdge;
                     if (leftTile != null)
@@ -85,7 +86,7 @@ namespace Assets.Scripts.Terrain
 
                 if (tile.RightEdge == null)
                 {
-                    var rightTile = GetTile(tile.CellPosition.x + 1 , tile.CellPosition.y);
+                    var rightTile = GetTile(tile.CellPosition.x + 1, tile.CellPosition.y);
                     var rightEdge = new TileEdge(tile, rightTile, EdgeOrientationEnum.Horizontal);
                     tile.RightEdge = rightEdge;
                     if (rightTile != null)
@@ -172,6 +173,82 @@ namespace Assets.Scripts.Terrain
                     }
                 }
             }
+        }
+
+        public IEnumerable<GameTile> GetOrientationTiles(GameTile centerTile, OrientationEnum orientation, int xSize, int zSize, bool onlyUnlocked = false)
+        {
+            var x = centerTile.CellPosition.x;
+            var y = centerTile.CellPosition.y;
+
+            for (int i = 0; i < xSize; i++)
+            {
+                for (int j = 0; j < zSize; j++)
+                {
+                    switch (orientation)
+                    {
+                        case OrientationEnum.E:
+                            yield return GetTile(x + i, y + j, onlyUnlocked);
+                            break;
+                        case OrientationEnum.N:
+                            yield return GetTile(x - j, y + i, onlyUnlocked);
+                            break;
+                        case OrientationEnum.W:
+                            yield return GetTile(x - i, y - j, onlyUnlocked);
+                            break;
+                        case OrientationEnum.S:
+                            yield return GetTile(x + j, y - i, onlyUnlocked);
+                            break;
+                    }
+                }
+            }
+        }
+
+        public Vector3 GetTilesCenter(GameTile tile, BuildingTypeEnum type, OrientationEnum orientation)
+        {
+            var buildingType = Engine.DataLibrary.BuildingTypes[type];
+            var xSize = buildingType.XSize;
+            var zSize = buildingType.ZSize;
+            var x = tile.CellPosition.x;
+            var y = tile.CellPosition.y;
+
+            var vectors = new List<Vector3>();
+
+            for (int i = 0; i < xSize; i++)
+            {
+                for (int j = 0; j < zSize; j++)
+                {
+                    Vector3Int cellPosition;
+
+                    switch (orientation)
+                    {
+                        case OrientationEnum.E:
+                            cellPosition = new Vector3Int(x + i, y + j, 0);
+                            break;
+                        case OrientationEnum.N:
+                            cellPosition = new Vector3Int(x - j, y + i, 0);
+                            break;
+                        case OrientationEnum.W:
+                            cellPosition = new Vector3Int(x - i, y - j, 0);
+                            break;
+                        case OrientationEnum.S:
+                            cellPosition = new Vector3Int(x + j, y - i, 0);
+                            break;
+                        default:
+                            continue;
+                    }
+
+                    vectors.Add(BuildingTilemap.GetCellCenterWorld(cellPosition));
+                }
+
+            }
+
+            var sum = Vector3.zero;
+            foreach (var vector in vectors)
+            {
+                sum += vector;
+            }
+
+            return sum / vectors.Count;
         }
     }
 }
