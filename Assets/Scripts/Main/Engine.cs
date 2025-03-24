@@ -20,6 +20,8 @@ namespace Assets.Scripts.Main
 
         public StoreManager StoreManager;
 
+        public ConstructionSystem ConstructionSystem;
+
         public Building CreateBuilding(GameTile centerTile, BuildingTypeEnum type)
         {
             if (type == BuildingTypeEnum.None)

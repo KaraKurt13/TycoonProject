@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 namespace Assets.Scripts.Main
@@ -25,15 +26,6 @@ namespace Assets.Scripts.Main
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                IsConstructing = !IsConstructing;
-                if (!IsConstructing)
-                    HideConstructionBlueprint();
-                else
-                    DrawConstructionBlueprint(BuildingTypeEnum.BigShelf);
-            }
-
             if (!IsConstructing)
                 return;
 
@@ -46,8 +38,12 @@ namespace Assets.Scripts.Main
                     _currentTile = tile;
             }
 
-            if (Input.GetMouseButtonDown(0) && _currentTile != null && ConstructionIsPossible())
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && _currentTile != null && ConstructionIsPossible())
+            {
                 ConstructBuilding();
+                StopConstructing();
+                return;
+            }
 
             if (_currentTile != null)
                 UpdateBlueprint();
@@ -63,30 +59,24 @@ namespace Assets.Scripts.Main
                 Engine.CreateBuilding(_currentTile, _selectedBuilding.Type);
         }
 
-        public void UpdateBlueprint()
+        public void StartConstructing(BuildingTypeEnum type)
+        {
+            HideConstructionBlueprint();
+            DrawConstructionBlueprint(type);
+            IsConstructing = true;
+        }
+
+        public void StopConstructing()
+        {
+            HideConstructionBlueprint();
+            _selectedBuilding = null;
+            IsConstructing = false;
+        }
+
+        private void UpdateBlueprint()
         {
             UpdateBlueprintPosition();
             UpdateBlueprintColor();
-        }
-
-        private void UpdateBlueprintColor()
-        {
-            BlueprintRenderer.GetPropertyBlock(_propertyBlock);
-            var color = _propertyBlock.GetColor("_Color");
-            color = ConstructionIsPossible() ? Color.green : Color.red;
-            _propertyBlock.SetColor("_Color", color);
-            BlueprintRenderer.SetPropertyBlock(_propertyBlock);
-        }
-
-        private void UpdateConstructionAllowance()
-        {
-
-        }
-
-        private void UpdateBlueprintPosition()
-        {
-            if (Engine.Terrain.GetOrientationTiles(_currentTile, OrientationEnum.E, _selectedBuilding.XSize, _selectedBuilding.ZSize, true).All(t => t != null))
-                Blueprint.transform.position = Engine.Terrain.GetTilesCenter(_currentTile, _selectedBuilding.Type, OrientationEnum.E);
         }
 
         private void DrawConstructionBlueprint(BuildingTypeEnum typeEnum)
@@ -103,7 +93,21 @@ namespace Assets.Scripts.Main
         {
             Destroy(Blueprint);
             BlueprintRenderer = null;
-            _selectedBuilding = null;
+        }
+
+        private void UpdateBlueprintColor()
+        {
+            BlueprintRenderer.GetPropertyBlock(_propertyBlock);
+            var color = _propertyBlock.GetColor("_Color");
+            color = ConstructionIsPossible() ? Color.green : Color.red;
+            _propertyBlock.SetColor("_Color", color);
+            BlueprintRenderer.SetPropertyBlock(_propertyBlock);
+        }
+
+        private void UpdateBlueprintPosition()
+        {
+            if (Engine.Terrain.GetOrientationTiles(_currentTile, OrientationEnum.E, _selectedBuilding.XSize, _selectedBuilding.ZSize, true).All(t => t != null))
+                Blueprint.transform.position = Engine.Terrain.GetTilesCenter(_currentTile, _selectedBuilding.Type, OrientationEnum.E);
         }
 
         private bool ConstructionIsPossible()

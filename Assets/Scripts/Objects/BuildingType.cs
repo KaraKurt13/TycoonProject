@@ -23,9 +23,13 @@ namespace Assets.Scripts.Objects
         public int ZSize { get; set; }
 
         public dynamic PropertyParameters { get; set; }
+
+        public int Cost { get; set; }
         #endregion GameData
 
         public BuildingProperty PropertyTemplate { get; private set; }
+
+        public Sprite Icon { get; set; }
 
         public GameObject Prefab;
 

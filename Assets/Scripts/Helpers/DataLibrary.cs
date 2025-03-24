@@ -25,6 +25,7 @@ public class DataLibrary
         foreach (var type in BuildingTypes.Values)
         {
             type.Prefab = Resources.Load<GameObject>($"Prefabs/Buildings/{type.Type}");
+            type.Icon = Resources.Load<Sprite>($"Sprites/Buildings/{type.Type}");
             type.InitializePropertyTemplate(this);
 
         }

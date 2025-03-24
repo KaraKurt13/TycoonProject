@@ -8,8 +8,9 @@ namespace Assets.Scripts.Main
 {
     public class StoreManager : MonoBehaviour
     {
+        public int CurrencyAmount { get; private set; }
+
         public List<Building> Buildings = new();
-        // Shelfs list
 
         public Building GetRandomRequiredShelf()
         {
