@@ -9,6 +9,8 @@ namespace Assets.Scripts.Terrain
     {
         public Building Building;
 
+        public TileEdge TopEdge, BottomEdge, LeftEdge, RightEdge;
+
         public Vector3Int CellPosition;
 
         public Vector3 Center;
@@ -19,6 +21,14 @@ namespace Assets.Scripts.Terrain
         {
             CellPosition = cell;
             Center = center;
+        }
+
+        public IEnumerable<TileEdge> GetEdges()
+        {
+            yield return TopEdge;
+            yield return BottomEdge;
+            yield return LeftEdge;
+            yield return RightEdge;
         }
     }
 }
