@@ -56,7 +56,6 @@ namespace Assets.Scripts.Terrain
                 if (tile.TopEdge == null)
                 {
                     var topTile = GetTile(tile.CellPosition.x, tile.CellPosition.y + 1);
-                    Debug.Log(topTile);
                     var topEdge = new TileEdge(tile, topTile, EdgeOrientationEnum.Vertical);
                     tile.TopEdge = topEdge;
                     if (topTile != null)

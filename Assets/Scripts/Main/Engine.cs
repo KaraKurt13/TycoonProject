@@ -41,7 +41,7 @@ namespace Assets.Scripts.Main
                     if (!territory.IsUnlocked)
                     {
                         SelectionBox.SetSelection(territory.Center, territory.Width + 1, territory.Height + 1);
-                        if (Input.GetMouseButtonDown(0))
+                        if (Input.GetMouseButtonDown(0) && territory.CanBeUnlocked())
                             Terrain.ExpandTerritory(territory);
                     }
                     else
