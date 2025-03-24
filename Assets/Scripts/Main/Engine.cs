@@ -14,7 +14,11 @@ namespace Assets.Scripts.Main
     {
         public GameTerrain Terrain;
 
+        public DataLibrary DataLibrary;
+
         public SelectionBox SelectionBox;
+
+        public StoreManager StoreManager;
 
         [SerializeField] private GameObject _buildingPrefab;
 
@@ -22,11 +26,15 @@ namespace Assets.Scripts.Main
         {
             var building = Instantiate(_buildingPrefab, centerTile.Center, Quaternion.identity).GetComponent<Building>();
             centerTile.Building = building;
+            StoreManager.Buildings.Add(building);
             return building;
         }
 
         private void Start()
         {
+            JsonDataManager.Initialize();
+            DataLibrary = new();
+            DataLibrary.Initialize();
             Terrain.Initialize();
         }
 

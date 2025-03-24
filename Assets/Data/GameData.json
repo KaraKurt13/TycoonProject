@@ -1,0 +1,56 @@
+{
+  "BuildingTypes": [
+    {
+      "Name": "Cash Register",
+      "Description": "Basic cash register. Requires one worker.",
+      "Type": "CashRegister",
+      "XSize": 1,
+      "ZSize": 1,
+      "PropertyParameters": {
+        "Type": "CashRegisterProperty",
+        "Parameters": {
+
+        }
+      }
+    },
+    {
+      "Name": "Small shelf",
+      "Description": "Small shelf with 3 slots.",
+      "Type": "SmallShelf",
+      "XSize": 1,
+      "ZSize": 1,
+      "PropertyParameters": {
+        "Type": "ShelfProperty",
+        "Parameters": {
+          "SlotsCount": 3
+        }
+      }
+    },
+    {
+      "Name": "Medium shelf",
+      "Description": "Medium shelf with 6 slots.",
+      "Type": "MediumShelf",
+      "XSize": 2,
+      "ZSize": 1,
+      "PropertyParameters": {
+        "Type": "ShelfProperty",
+        "Parameters": {
+          "SlotsCount": 6
+        }
+      }
+    },
+    {
+      "Name": "Big shelf",
+      "Description": "Big shelf with 9 slots.",
+      "Type": "BigShelf",
+      "XSize": 3,
+      "ZSize": 1,
+      "PropertyParameters": {
+        "Type": "ShelfProperty",
+        "Parameters": {
+          "SlotsCount": 9
+        }
+      }
+    }
+  ]
+}
