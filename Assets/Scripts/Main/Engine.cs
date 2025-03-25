@@ -1,5 +1,6 @@
 using Assets.Scripts.Objects;
 using Assets.Scripts.Terrain;
+using Assets.Scripts.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace Assets.Scripts.Main
         public StoreManager StoreManager;
 
         public ConstructionSystem ConstructionSystem;
+
+        public ComponentsController ComponentsController;
 
         public Building CreateBuilding(GameTile centerTile, BuildingTypeEnum type)
         {
@@ -66,9 +69,17 @@ namespace Assets.Scripts.Main
                         {
                             var tile = Terrain.GetTile(hit.point);
                             if (tile != null)
+                            {
                                 SelectionBox.SetSelection(tile.Center, 1, 1);
+                                Debug.Log(tile.CellPosition);
+                            }
                         }
                     }
+                }
+
+                if (Input.GetMouseButtonDown(0) && hit.collider.TryGetComponent<Building>(out var building))
+                {
+                    ComponentsController.DrawBuildingManagement(building);
                 }
             }
             else

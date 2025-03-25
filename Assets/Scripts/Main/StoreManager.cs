@@ -21,9 +21,18 @@ namespace Assets.Scripts.Main
         public void Initialize()
         {
             Storage = new Storage(Engine, 24);
+            Storage.AddItem(ItemTypeEnum.Sugar, 10);
+            Storage.AddItem(ItemTypeEnum.Sugar, 10);
+            Storage.AddItem(ItemTypeEnum.Milk, 5);
+            Storage.AddItem(ItemTypeEnum.Eggs, 20);
+            Storage.AddItem(ItemTypeEnum.Oil, 5);
             SellPrices = new();
             foreach (var item in Engine.DataLibrary.ItemTypes)
                 SellPrices.Add(item.Key, item.Value.BuyPrice + 2);
+
+            Engine.CreateBuilding(Engine.Terrain.GetTile(4,3), BuildingTypeEnum.MediumShelf);
+            Engine.CreateBuilding(Engine.Terrain.GetTile(11,3), BuildingTypeEnum.MediumShelf);
+            Engine.CreateBuilding(Engine.Terrain.GetTile(4, -3), BuildingTypeEnum.CashRegister);
         }
 
         public void UpdateItemPrice(ItemTypeEnum item, int value)

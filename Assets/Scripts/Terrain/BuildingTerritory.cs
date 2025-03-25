@@ -31,7 +31,7 @@ namespace Assets.Scripts.Terrain
 
         private void Start()
         {
-            SelectionCollider.size = new Vector3(Width + 1, 1, Height + 1);
+            SelectionCollider.size = new Vector3(Width + 1, 0, Height + 1);
             Center = transform.position;
         }
     }

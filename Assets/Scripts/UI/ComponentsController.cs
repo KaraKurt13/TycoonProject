@@ -1,4 +1,5 @@
 using Assets.Scripts.Main;
+using Assets.Scripts.Objects;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,19 @@ namespace Assets.Scripts.UI
             ConstructionComponent.Hide();
             Engine.ConstructionSystem.StopConstructing();
             PricesManagementComponent.Hide();
+        }
+
+        [Header("Buildings")]
+        public ShelfManagementComponent ShelfManagementComponent;
+
+        public void DrawBuildingManagement(Building building)
+        {
+            Debug.Log(building.Property);
+            if (building.Property == null)
+                return;
+
+            if (building.Property is ShelfProperty shelf)
+                ShelfManagementComponent.DrawShelf(shelf);
         }
     }
 }
