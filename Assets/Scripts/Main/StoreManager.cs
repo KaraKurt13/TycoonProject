@@ -33,7 +33,7 @@ namespace Assets.Scripts.Main
             Engine.CreateBuilding(Engine.Terrain.GetTile(4,3), BuildingTypeEnum.MediumShelf);
             Engine.CreateBuilding(Engine.Terrain.GetTile(11,3), BuildingTypeEnum.MediumShelf);
             Engine.CreateBuilding(Engine.Terrain.GetTile(4, -3), BuildingTypeEnum.CashRegister);
-            AddCurrency(200);
+            AddCurrency(500);
         }
 
         public void AddCurrency(int amount)
@@ -78,7 +78,7 @@ namespace Assets.Scripts.Main
 
             var price = GetItemPrice(item, amount);
             CurrencyAmount -= price;
-            Storage.AddItem(item, price);
+            Storage.AddItem(item, amount);
         }
 
         public int GetItemPrice(ItemTypeEnum item, int amount)

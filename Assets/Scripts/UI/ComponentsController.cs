@@ -18,6 +18,8 @@ namespace Assets.Scripts.UI
 
         public TerritoryPurchaseComponent TerritoryPurchaseComponent;
 
+        public SuppliesOrderComponent SuppliesOrderComponent;
+
         public void HideAll()
         {
             StorageComponent.Hide();
@@ -25,6 +27,7 @@ namespace Assets.Scripts.UI
             Engine.ConstructionSystem.StopConstructing();
             PricesManagementComponent.Hide();
             TerritoryPurchaseComponent.Hide();
+            SuppliesOrderComponent.Hide();
         }
 
         [Header("Buildings")]
@@ -32,7 +35,6 @@ namespace Assets.Scripts.UI
 
         public void DrawBuildingManagement(Building building)
         {
-            Debug.Log(building.Property);
             if (building.Property == null)
                 return;
 
