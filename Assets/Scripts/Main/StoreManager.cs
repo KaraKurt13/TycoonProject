@@ -55,7 +55,7 @@ namespace Assets.Scripts.Main
         {
             var shelfs = Buildings.Where(b => b.Property is ShelfProperty);
             // Get list of shelfs and check for required product. Return null if there are shelfs with required resource 
-            return null;
+            return shelfs.First();
         }
 
         public Building GetCashRegister()

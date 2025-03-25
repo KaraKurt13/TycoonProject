@@ -1,5 +1,6 @@
 using Assets.Scripts.Objects;
 using Assets.Scripts.Terrain;
+using Assets.Scripts.Terrain.Navigation;
 using Assets.Scripts.UI;
 using System;
 using System.Collections;
@@ -25,6 +26,8 @@ namespace Assets.Scripts.Main
 
         public ComponentsController ComponentsController;
 
+        public NavigationManager NavigationManager;
+
         public Building CreateBuilding(GameTile centerTile, BuildingTypeEnum type)
         {
             if (type == BuildingTypeEnum.None)
@@ -41,6 +44,15 @@ namespace Assets.Scripts.Main
             return building;
         }
 
+        [SerializeField] private GameObject _customerPrefab;
+
+        public void CreateCustomer(GameTile tile)
+        {
+            var customer = Instantiate(_customerPrefab, tile.Center, Quaternion.identity).GetComponent<Customer>();
+            var t = Terrain.GetTile(8, -5);
+            customer.Agent.SetDestination(StoreManager.GetRandomRequiredShelf().transform.position);
+        }
+
         private void Start()
         {
             JsonDataManager.Initialize();
@@ -48,6 +60,7 @@ namespace Assets.Scripts.Main
             DataLibrary.Initialize();
             Terrain.Initialize();
             StoreManager.Initialize();
+            CreateCustomer(Terrain.GetTile(7, -5));
         }
 
         private void Update()

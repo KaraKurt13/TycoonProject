@@ -11,6 +11,8 @@ namespace Assets.Scripts.Main
 
         private const float _minZoom = 5f, _maxZoom = 15f, _zoomSpeed = 5f;
 
+        private float _minX = -12, _maxX = 30, _minZ = -22, _maxZ = 16;
+
         public void MoveCameraOnPoint(Vector3 point)
         {
             Camera.main.transform.position = point;
@@ -33,7 +35,9 @@ namespace Assets.Scripts.Main
             var verticalStep = (_moveSpeed * speedBoost) * vertical * Time.deltaTime;
             var horizontalStep = (_moveSpeed * speedBoost) * horizontal * Time.deltaTime;
 
-            var newPosition = new Vector3(position.x + horizontalStep, position.y, position.z + verticalStep);
+            var newX = Mathf.Clamp(position.x + horizontalStep, _minX, _maxX);
+            var newZ = Mathf.Clamp(position.z + verticalStep, _minZ, _maxZ);
+            var newPosition = new Vector3(newX, position.y, newZ);
 
             Camera.main.transform.position = newPosition;
         }

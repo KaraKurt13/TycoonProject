@@ -96,6 +96,10 @@ namespace Assets.Scripts.Terrain
             }
 
             ExpandTerritory(InitialTerritory);
+            List<(Vector3Int cell, Vector3 pos)> tileList = _tiles
+                .Select(kvp => (kvp.Key, kvp.Value.Center))
+                .ToList();
+            Engine.NavigationManager.Initialize(tileList);
         }
 
         /// <summary>
