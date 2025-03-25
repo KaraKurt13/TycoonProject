@@ -113,7 +113,7 @@ namespace Assets.Scripts.Main
         private bool ConstructionIsPossible()
         {
             var occupiedTiles = Engine.Terrain.GetOrientationTiles(_currentTile, OrientationEnum.E, _selectedBuilding.XSize, _selectedBuilding.ZSize, true);
-            return occupiedTiles.All(t => t != null && t.Building == null);
+            return occupiedTiles.All(t => t != null && t.Building == null) && Engine.StoreManager.CurrencyAmount >= _selectedBuilding.Cost;
         }
     }
 }

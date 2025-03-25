@@ -44,13 +44,13 @@ namespace Assets.Scripts.Main
             DataLibrary = new();
             DataLibrary.Initialize();
             Terrain.Initialize();
+            StoreManager.Initialize();
         }
 
         private void Update()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 if (hit.collider.TryGetComponent<BuildingTerritory>(out var territory))
                 {
@@ -73,7 +73,7 @@ namespace Assets.Scripts.Main
             }
             else
                 SelectionBox.ClearSelection();
-  
+
         }
     }
 }

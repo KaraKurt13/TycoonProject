@@ -36,7 +36,6 @@ namespace Assets.Scripts.Objects
         public void InitializePropertyTemplate(DataLibrary dataLibrary)
         {
             string par = JsonConvert.SerializeObject((object)PropertyParameters);
-            dynamic parameters = new ExpandoObject();
             var parameterDict = JsonConvert.DeserializeObject<IDictionary<string, object>>(par);
             if (!parameterDict.TryGetValue("Type", out var typeValue)) return;
 

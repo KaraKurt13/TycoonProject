@@ -27,7 +27,7 @@ namespace Assets.Scripts.Objects
             {
                 var propertyCopy = SystemExtensions.Clone(Type.PropertyTemplate);
                 propertyCopy.Building = this;
-                propertyCopy.Initialize();
+                propertyCopy.Initialize(Engine);
                 Property = propertyCopy;
             }
         }

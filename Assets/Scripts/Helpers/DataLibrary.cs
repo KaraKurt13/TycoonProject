@@ -12,6 +12,8 @@ public class DataLibrary
 
     public Dictionary<BuildingPropertyTypeEnum, Type> BuildingPropertyTypes;
 
+    public Dictionary<ItemTypeEnum, ItemType> ItemTypes;
+
     public void Initialize()
     {
         var types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(BuildingProperty)) && !t.IsAbstract);
@@ -27,7 +29,10 @@ public class DataLibrary
             type.Prefab = Resources.Load<GameObject>($"Prefabs/Buildings/{type.Type}");
             type.Icon = Resources.Load<Sprite>($"Sprites/Buildings/{type.Type}");
             type.InitializePropertyTemplate(this);
-
         }
+
+        ItemTypes = JsonDataManager.DeserializeObjects<ItemTypeEnum, ItemType>("ItemTypes");
+        foreach (var type in ItemTypes.Values)
+            type.Icon = Resources.Load<Sprite>($"Sprites/Items/{type.Type}");
     }
 }

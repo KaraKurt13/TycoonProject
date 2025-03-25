@@ -8,9 +8,23 @@ namespace Assets.Scripts.Main
 {
     public class StoreManager : MonoBehaviour
     {
+        public Engine Engine;
+
         public int CurrencyAmount { get; private set; }
 
+        public Storage Storage;
+
         public List<Building> Buildings = new();
+
+        public Dictionary<ItemTypeEnum, int> SellPrices;
+
+        public void Initialize()
+        {
+            Storage = new Storage(Engine, 24);
+            SellPrices = new();
+            foreach (var item in Engine.DataLibrary.ItemTypes)
+                SellPrices.Add(item.Key, item.Value.BuyPrice + 2);
+        }
 
         public Building GetRandomRequiredShelf()
         {
@@ -25,6 +39,27 @@ namespace Assets.Scripts.Main
             // Get list of cash registers and get cash register with least units in queue. If there are no free cash registers,
             // unit will wait until there will be one
             return null;
+        }
+
+        public bool CanBuyItem(ItemTypeEnum item, int amount)
+        {
+            return CurrencyAmount >= GetItemPrice(item, amount) && Storage.CanAddItem(item);
+        }
+
+        public void BuyItem(ItemTypeEnum item, int amount)
+        {
+            if (!CanBuyItem(item, amount))
+                return;
+
+            var price = GetItemPrice(item, amount);
+            CurrencyAmount -= price;
+            Storage.AddItem(item, price);
+        }
+
+        public int GetItemPrice(ItemTypeEnum item, int amount)
+        {
+            var itemType = Engine.DataLibrary.ItemTypes[item];
+            return itemType.BuyPrice * amount;
         }
     }
 }

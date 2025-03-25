@@ -1,3 +1,4 @@
+using Assets.Scripts.Main;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,6 @@ namespace Assets.Scripts.Objects
 
         public virtual void Tick() { }
 
-        public virtual void Initialize() { }
+        public virtual void Initialize(Engine engine) { }
     }
 }

@@ -56,5 +56,33 @@
         }
       }
     }
+  ],
+  "ItemTypes": [
+    {
+      "Name": "Sugar",
+      "Type": "Sugar",
+      "BuyPrice": 10
+    },
+    {
+      "Name": "Salt",
+      "Type": "Salt",
+      "BuyPrice": 10
+    },
+    {
+      "Name": "Milk",
+      "Type": "Milk",
+      "BuyPrice": 15
+    },
+    {
+      "Name": "Eggs",
+      "Type": "Eggs",
+      "BuyPrice": 20
+    },
+    {
+      "Name": "Oil",
+      "Type": "Oil",
+      "BuyPrice": 30
+    }
+
   ]
 }

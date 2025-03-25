@@ -173,6 +173,11 @@ namespace Assets.Scripts.Terrain
                     }
                 }
             }
+
+            // Destroying entry walls
+            Destroy(GetTile(7, -5).BottomEdge.Wall);
+            Destroy(GetTile(8, -5).BottomEdge.Wall);
+            
         }
 
         public IEnumerable<GameTile> GetOrientationTiles(GameTile centerTile, OrientationEnum orientation, int xSize, int zSize, bool onlyUnlocked = false)
