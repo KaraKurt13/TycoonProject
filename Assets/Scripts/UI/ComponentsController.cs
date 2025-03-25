@@ -16,12 +16,15 @@ namespace Assets.Scripts.UI
 
         public PricesManagementComponent PricesManagementComponent;
 
+        public TerritoryPurchaseComponent TerritoryPurchaseComponent;
+
         public void HideAll()
         {
             StorageComponent.Hide();
             ConstructionComponent.Hide();
             Engine.ConstructionSystem.StopConstructing();
             PricesManagementComponent.Hide();
+            TerritoryPurchaseComponent.Hide();
         }
 
         [Header("Buildings")]

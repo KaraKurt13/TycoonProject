@@ -19,6 +19,8 @@ namespace Assets.Scripts.Terrain
 
         public List<BuildingTerritory> RequiredTerritories;
 
+        public int Cost;
+
         public bool CanBeUnlocked()
         {
             return RequiredTerritories.All(t => t.IsUnlocked);
