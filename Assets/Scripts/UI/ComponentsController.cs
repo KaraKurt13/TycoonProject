@@ -13,11 +13,14 @@ namespace Assets.Scripts.UI
 
         public ConstructionComponent ConstructionComponent;
 
+        public PricesManagementComponent PricesManagementComponent;
+
         public void HideAll()
         {
             StorageComponent.Hide();
             ConstructionComponent.Hide();
             Engine.ConstructionSystem.StopConstructing();
+            PricesManagementComponent.Hide();
         }
     }
 }

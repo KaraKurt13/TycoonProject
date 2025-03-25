@@ -26,6 +26,11 @@ namespace Assets.Scripts.Main
                 SellPrices.Add(item.Key, item.Value.BuyPrice + 2);
         }
 
+        public void UpdateItemPrice(ItemTypeEnum item, int value)
+        {
+            SellPrices[item] = value;
+        }
+
         public Building GetRandomRequiredShelf()
         {
             var shelfs = Buildings.Where(b => b.Property is ShelfProperty);
