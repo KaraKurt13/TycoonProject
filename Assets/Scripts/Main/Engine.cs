@@ -28,6 +28,10 @@ namespace Assets.Scripts.Main
 
         public NavigationManager NavigationManager;
 
+        public List<Building> Buildings;
+
+        public List<Customer> Customers;
+
         public Building CreateBuilding(GameTile centerTile, BuildingTypeEnum type)
         {
             if (type == BuildingTypeEnum.None)
@@ -35,11 +39,12 @@ namespace Assets.Scripts.Main
 
             var buildingCenter = Terrain.GetTilesCenter(centerTile, type, OrientationEnum.E);
             var buildingType = DataLibrary.BuildingTypes[type];
+            buildingCenter.y = buildingType.Prefab.transform.position.y;
             var building = Instantiate(buildingType.Prefab, buildingCenter, Quaternion.identity).GetComponent<Building>();
             building.Engine = this;
             building.Type = buildingType;
             centerTile.Building = building;
-            StoreManager.Buildings.Add(building);
+            Buildings.Add(building);
             building.Initialize();
             return building;
         }
@@ -48,9 +53,12 @@ namespace Assets.Scripts.Main
 
         public void CreateCustomer(GameTile tile)
         {
-            var customer = Instantiate(_customerPrefab, tile.Center, Quaternion.identity).GetComponent<Customer>();
-            var t = Terrain.GetTile(8, -5);
-            customer.Agent.SetDestination(StoreManager.GetRandomRequiredShelf().transform.position);
+            var position = tile.Center;
+            position.y = _customerPrefab.transform.position.y;
+            var customer = Instantiate(_customerPrefab, position, Quaternion.identity).GetComponent<Customer>();
+            customer.Engine = this;
+            Customers.Add(customer);
+            customer.Initialize();
         }
 
         private void Start()
@@ -84,7 +92,6 @@ namespace Assets.Scripts.Main
                             if (tile != null)
                             {
                                 SelectionBox.SetSelection(tile.Center, 1, 1);
-                                Debug.Log(tile.CellPosition);
                             }
                         }
                     }
@@ -98,6 +105,11 @@ namespace Assets.Scripts.Main
             else
                 SelectionBox.ClearSelection();
 
+        }
+
+        private void FixedUpdate()
+        {
+            
         }
     }
 }

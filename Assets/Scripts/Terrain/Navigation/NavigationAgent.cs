@@ -49,10 +49,8 @@ namespace Assets.Scripts.Terrain.Navigation
 
         public void SetDestination(Vector3 destination)
         {
-            Debug.Log(_navManager);
             var position = transform.position;
             _path = _navManager.FindPath(position, destination);
-            Debug.Log(_path.Count);
             _currentPathIndex = 0;
             for (int i = 1; i < _path.Count; i++)
             {

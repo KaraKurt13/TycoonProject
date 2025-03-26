@@ -1,4 +1,5 @@
 using Assets.Scripts.Objects;
+using Assets.Scripts.Terrain;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,14 @@ namespace Assets.Scripts.Main
 
         public Storage Storage;
 
-        public List<Building> Buildings = new();
-
         public Dictionary<ItemTypeEnum, int> SellPrices;
+
+        public GameTile ExitTile;
 
         public void Initialize()
         {
             Storage = new Storage(Engine, 24);
+            ExitTile = Engine.Terrain.GetTile(7, -5);
             Storage.AddItem(ItemTypeEnum.Sugar, 10);
             Storage.AddItem(ItemTypeEnum.Sugar, 10);
             Storage.AddItem(ItemTypeEnum.Milk, 5);
@@ -30,7 +32,10 @@ namespace Assets.Scripts.Main
             foreach (var item in Engine.DataLibrary.ItemTypes)
                 SellPrices.Add(item.Key, item.Value.BuyPrice + 2);
 
-            Engine.CreateBuilding(Engine.Terrain.GetTile(4,3), BuildingTypeEnum.MediumShelf);
+            var shelf = Engine.CreateBuilding(Engine.Terrain.GetTile(4,3), BuildingTypeEnum.MediumShelf).Property as ShelfProperty;
+            shelf.Storage.AddItem(ItemTypeEnum.Sugar, 2);
+            shelf.Storage.AddItem(ItemTypeEnum.Salt, 2);
+            shelf.Storage.AddItem(ItemTypeEnum.Oil, 1);
             Engine.CreateBuilding(Engine.Terrain.GetTile(11,3), BuildingTypeEnum.MediumShelf);
             Engine.CreateBuilding(Engine.Terrain.GetTile(4, -3), BuildingTypeEnum.CashRegister);
             AddCurrency(500);
@@ -51,24 +56,21 @@ namespace Assets.Scripts.Main
             SellPrices[item] = value;
         }
 
-        public Building GetRandomRequiredShelf()
+        public Building GetRandomRequiredShelf(ItemTypeEnum item)
         {
-            var shelfs = Buildings.Where(b => b.Property is ShelfProperty);
-            // Get list of shelfs and check for required product. Return null if there are shelfs with required resource 
-            return shelfs.First();
+            var shelfs = Engine.Buildings.Where(b => b.Property is ShelfProperty shelf && shelf.Storage.HasItem(item, 1));
+            return shelfs.FirstOrDefault();
         }
 
         public Building GetCashRegister()
         {
-            var cashRegisters = Buildings.Where(b => b.Property is CashRegisterProperty);
-            // Get list of cash registers and get cash register with least units in queue. If there are no free cash registers,
-            // unit will wait until there will be one
-            return null;
+            var cashRegisters = Engine.Buildings.Where(b => b.Property is CashRegisterProperty);
+            return cashRegisters.FirstOrDefault();
         }
 
         public bool CanBuyItem(ItemTypeEnum item, int amount)
         {
-            return CurrencyAmount >= GetItemPrice(item, amount) && Storage.CanAddItem(item);
+            return CurrencyAmount >= GetItemBuyPrice(item, amount) && Storage.CanAddItem(item);
         }
 
         public void BuyItem(ItemTypeEnum item, int amount)
@@ -76,15 +78,20 @@ namespace Assets.Scripts.Main
             if (!CanBuyItem(item, amount))
                 return;
 
-            var price = GetItemPrice(item, amount);
+            var price = GetItemBuyPrice(item, amount);
             CurrencyAmount -= price;
             Storage.AddItem(item, amount);
         }
 
-        public int GetItemPrice(ItemTypeEnum item, int amount)
+        public int GetItemBuyPrice(ItemTypeEnum item, int amount)
         {
             var itemType = Engine.DataLibrary.ItemTypes[item];
             return itemType.BuyPrice * amount;
+        }
+
+        public int GetItemSellPrice(ItemTypeEnum item, int amount)
+        {
+            return SellPrices[item] * amount;
         }
     }
 }

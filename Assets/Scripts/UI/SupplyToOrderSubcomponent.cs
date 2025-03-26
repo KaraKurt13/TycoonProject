@@ -22,7 +22,7 @@ namespace Assets.Scripts.UI
         {
             var storeManager = engine.StoreManager;
             var canAfford = storeManager.CanBuyItem(item, amount);
-            var totalPrice = storeManager.GetItemPrice(item, amount);
+            var totalPrice = storeManager.GetItemBuyPrice(item, amount);
             var color = canAfford ? Color.white : Color.red;
             SetAmount.text = amount.ToString();
             BuyPrice.text = totalPrice.ToString();
