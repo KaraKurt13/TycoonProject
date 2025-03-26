@@ -83,6 +83,7 @@ namespace Assets.Scripts.Main
             var type = Engine.DataLibrary.BuildingTypes[typeEnum];
             var prefab = type.Prefab;
             Blueprint = Instantiate(prefab);
+            Blueprint.transform.rotation = prefab.transform.rotation;
             BlueprintRenderers = Blueprint.GetComponent<Building>().Renderers;
         }
 

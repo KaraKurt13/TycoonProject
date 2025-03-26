@@ -47,6 +47,7 @@ namespace Assets.Scripts.Main
             var tiles = Terrain.GetOrientationTiles(centerTile, OrientationEnum.E, buildingType.XSize, buildingType.ZSize);
             buildingCenter.y = buildingType.Prefab.transform.position.y;
             var building = Instantiate(buildingType.Prefab, buildingCenter, Quaternion.identity).GetComponent<Building>();
+            building.transform.rotation = buildingType.Prefab.transform.rotation;
             building.Tiles = tiles.ToList();
             building.InitialTile = centerTile;
             building.Engine = this;
