@@ -1,3 +1,4 @@
+using Assets.Scripts.Helpers;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Terrain;
 using System.Collections;
@@ -13,11 +14,25 @@ namespace Assets.Scripts.Main
 
         public int CurrencyAmount { get; private set; }
 
+        public int Satisfaction { get; private set; }
+
         public Storage Storage;
 
         public Dictionary<ItemTypeEnum, int> SellPrices;
 
         public GameTile ExitTile;
+
+        private int _ticksTillCustomerSpawn, _maxTicksTillCustomerSpawn;
+
+        private void FixedUpdate()
+        {
+            _ticksTillCustomerSpawn--;
+            if (_ticksTillCustomerSpawn <= 0)
+            {
+                Engine.CreateCustomer(ExitTile);
+                _ticksTillCustomerSpawn = _maxTicksTillCustomerSpawn;
+            }
+        }
 
         public void Initialize()
         {
@@ -39,6 +54,8 @@ namespace Assets.Scripts.Main
             Engine.CreateBuilding(Engine.Terrain.GetTile(11,3), BuildingTypeEnum.MediumShelf);
             Engine.CreateBuilding(Engine.Terrain.GetTile(4, -3), BuildingTypeEnum.CashRegister);
             AddCurrency(500);
+            _maxTicksTillCustomerSpawn = TimeHelper.SecondsToTicks(5f);
+            _ticksTillCustomerSpawn = _maxTicksTillCustomerSpawn;
         }
 
         public void AddCurrency(int amount)
@@ -49,6 +66,11 @@ namespace Assets.Scripts.Main
         public void RemoveCurrency(int amount)
         {
             CurrencyAmount -= amount;
+        }
+
+        public void UpdateSatisfaction(int value)
+        {
+            Satisfaction += value;
         }
 
         public void UpdateItemPrice(ItemTypeEnum item, int value)

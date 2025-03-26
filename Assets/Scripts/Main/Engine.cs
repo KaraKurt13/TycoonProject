@@ -107,6 +107,8 @@ namespace Assets.Scripts.Main
 
         }
 
+        private int _ticksTillAutosave, _maxTicksTillAutosave;
+
         private void FixedUpdate()
         {
             

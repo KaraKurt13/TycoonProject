@@ -24,7 +24,7 @@ namespace Assets.Scripts.Obects.Customers
         public void Enter()
         {
             _targetCashRegister = _engine.StoreManager.GetCashRegister()?.Property as CashRegisterProperty;
-            Debug.Log(_targetCashRegister);
+
             if (_targetCashRegister != null)
             {
                 _customer.Agent.SetDestination(_targetCashRegister.Building.transform.position);
@@ -32,6 +32,7 @@ namespace Assets.Scripts.Obects.Customers
             }
             else
             {
+                _engine.StoreManager.UpdateSatisfaction(_customer.Satisfaction);
                 _customer.StateMachine.Enter<CustomerLeavingState>();
             }
         }
@@ -58,6 +59,7 @@ namespace Assets.Scripts.Obects.Customers
             var overallCost = itemTypes.Sum(i => _engine.StoreManager.GetItemBuyPrice(i, 1));
             _engine.StoreManager.AddCurrency(overallCost);
             _movingToRegister = false;
+            _engine.StoreManager.UpdateSatisfaction(_customer.Satisfaction);
             _customer.StateMachine.Enter<CustomerLeavingState>();
         }
     }

@@ -12,7 +12,7 @@ namespace Assets.Scripts.Objects.Customers
         private Customer _customer;
         private Engine _engine;
         private ShelfProperty _targetShelf;
-        private int _targetItemIndex = 0;
+        private int _targetItemIndex = 0, _purchasedItems = 0;
         private ItemTypeEnum _targetItem = ItemTypeEnum.None;
         private bool _movingToShelf = false;
 
@@ -41,7 +41,6 @@ namespace Assets.Scripts.Objects.Customers
             {
                 if (Vector3.Distance(_customer.transform.position, _targetShelf.Building.transform.position) < 1f)
                 {
-                    Debug.Log("Take item!");
                     _customer.Agent.ResetPath();
                     TakeItem();
                 }
@@ -52,7 +51,11 @@ namespace Assets.Scripts.Objects.Customers
         {
             if (_targetItemIndex >= _customer.PurchaseList.Count)
             {
-                _customer.StateMachine.Enter<CustomerPayoffState>();
+                if (_purchasedItems > 0)
+                    _customer.StateMachine.Enter<CustomerPayoffState>();
+                else
+                    _customer.StateMachine.Enter<CustomerLeavingState>();
+
                 return;
             }
 
@@ -62,6 +65,7 @@ namespace Assets.Scripts.Objects.Customers
             if (_targetShelf != null)
             {
                 _customer.Agent.SetDestination(_targetShelf.Building.transform.position);
+                _customer.Satisfaction++;
                 _movingToShelf = true;
             }
             else
@@ -77,6 +81,7 @@ namespace Assets.Scripts.Objects.Customers
             _targetShelf.Storage.TakeItem(_targetItem, 1);
             _customer.Storage.AddItem(_targetItem, 1);
             _targetItemIndex++;
+            _purchasedItems++;
             _movingToShelf = false;
 
             TryGetNextItem();
