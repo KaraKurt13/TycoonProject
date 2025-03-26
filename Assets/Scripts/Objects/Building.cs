@@ -19,6 +19,8 @@ namespace Assets.Scripts.Objects
 
         public BuildingProperty Property;
 
+        public GameTile InitialTile;
+
         public List<GameTile> Tiles = new();
 
         public List<MeshRenderer> Renderers;
@@ -34,9 +36,13 @@ namespace Assets.Scripts.Objects
             }
         }
 
-        public void Tick()
+        public void Destroy()
         {
-            Property?.Tick();
+            Engine.Buildings.Remove(this);
+            foreach (var tile in Tiles)
+                tile.Building = null;
+
+            Destroy(this.gameObject);
         }
     }
 }

@@ -31,6 +31,11 @@ namespace Assets.Scripts.Terrain
             IsUnlocked = true;
         }
 
+        public void Lock()
+        {
+            IsUnlocked = false;
+        }
+
         private void Start()
         {
             SelectionCollider.size = new Vector3(Width + 1, 0, Height + 1);

@@ -1,4 +1,6 @@
 using Assets.Scripts.Main;
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +9,7 @@ namespace Assets.Scripts.Objects
 {
     public class Storage
     {
+        [JsonIgnore]
         public Engine Engine;
 
         public Dictionary<ItemTypeEnum, int> Items { get; set; } = new();

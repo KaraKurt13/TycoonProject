@@ -1,4 +1,5 @@
 using Assets.Scripts.Helpers;
+using Assets.Scripts.Main.Save;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Terrain;
 using Assets.Scripts.Terrain.Navigation;
@@ -32,6 +33,8 @@ namespace Assets.Scripts.Main
 
         public List<Customer> Customers;
 
+        public SaveSystem SaveSystem;
+
         public Building CreateBuilding(GameTile centerTile, BuildingTypeEnum type)
         {
             if (type == BuildingTypeEnum.None)
@@ -43,6 +46,7 @@ namespace Assets.Scripts.Main
             buildingCenter.y = buildingType.Prefab.transform.position.y;
             var building = Instantiate(buildingType.Prefab, buildingCenter, Quaternion.identity).GetComponent<Building>();
             building.Tiles = tiles.ToList();
+            building.InitialTile = centerTile;
             building.Engine = this;
             building.Type = buildingType;
             centerTile.Building = building;
@@ -86,6 +90,7 @@ namespace Assets.Scripts.Main
             Terrain.Initialize();
             StoreManager.Initialize();
             CreateCustomer(Terrain.GetTile(7, -5));
+            SaveSystem = new(this);
             _maxTicksTillAutosave = TimeHelper.SecondsToTicks(30);
             _ticksTillAutosave = _maxTicksTillAutosave;
         }
@@ -133,9 +138,53 @@ namespace Assets.Scripts.Main
             _ticksTillAutosave--;
             if (_ticksTillAutosave <= 0)
             {
-                // autosave
+                Save();
                 _ticksTillAutosave = _maxTicksTillAutosave;
             }
         }
+
+        #region SaveLoad
+        public void Save()
+        {
+            SaveSystem.SaveGame();
+        }
+
+        public void Load()
+        {
+            ClearCurrentGame();
+            var data = SaveSystem.LoadGame();
+            StoreManager.CurrencyAmount = data.CurrencyAmount;
+            StoreManager.Satisfaction = data.SatisfactionRate;
+            StoreManager.Storage = new Storage(this, data.StoreStorage.MaxSlots);
+            StoreManager.Storage.Items = data.StoreStorage.Items;
+            StoreManager.SellPrices = data.SellPrices;
+
+            foreach (var buildingTerritory in data.TerritoriesData)
+            {
+                if (buildingTerritory.IsUnlocked)
+                {
+                    var territory = Terrain.BuildingTerritories[buildingTerritory.ID];
+                    Terrain.ExpandTerritory(territory);
+                }    
+            }
+
+            foreach (var building in data.BuildingsData)
+            {
+                var tile = Terrain.GetTile(building.CenterTile.x, building.CenterTile.y);
+                CreateBuilding(tile, building.Type);
+            }
+        }
+
+        private void ClearCurrentGame()
+        {
+            foreach (var customer in Customers.ToList())
+                customer.Destroy();
+
+            foreach (var building in Buildings.ToList())
+                building.Destroy();
+
+            Terrain.ResetAll();
+        }
+        #endregion SaveLoad
     }
 }

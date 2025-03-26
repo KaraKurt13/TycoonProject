@@ -1,12 +1,10 @@
 using Assets.Scripts.Main;
-using Assets.Scripts.Objects;
-using Assets.Scripts.Objects.Customers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Assets.Scripts.Obects.Customers
+namespace Assets.Scripts.Objects.Customers
 {
     public class CustomerPayoffState : ICustomerState
     {

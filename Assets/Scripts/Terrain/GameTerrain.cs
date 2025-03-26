@@ -259,5 +259,23 @@ namespace Assets.Scripts.Terrain
 
             return sum / vectors.Count;
         }
+
+        public void ResetAll()
+        {
+            BuildingTilemap.ClearAllTiles();
+
+            foreach (var territory in BuildingTerritories)
+                territory.Lock();
+
+            foreach (var tile in _tiles.Values)
+            {
+                tile.IsUnlocked = false;
+                foreach (var edge in tile.GetEdges())
+                {
+                    Destroy(edge.Wall);
+                    edge.Wall = null;
+                }
+            }
+        }
     }
 }

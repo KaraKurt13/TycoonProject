@@ -12,9 +12,9 @@ namespace Assets.Scripts.Main
     {
         public Engine Engine;
 
-        public int CurrencyAmount { get; private set; }
+        public int CurrencyAmount { get; set; }
 
-        public int Satisfaction { get; private set; }
+        public int Satisfaction { get; set; }
 
         public Storage Storage;
 
