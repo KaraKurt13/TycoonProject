@@ -21,7 +21,6 @@ namespace Assets.Scripts.Main
 
         private void Start()
         {
-            _propertyBlock = new MaterialPropertyBlock();
         }
 
         private void Update()
@@ -50,8 +49,7 @@ namespace Assets.Scripts.Main
         }
 
         public GameObject Blueprint;
-        public MeshRenderer BlueprintRenderer;
-        private MaterialPropertyBlock _propertyBlock;
+        public List<MeshRenderer> BlueprintRenderers;
 
         public void ConstructBuilding()
         {
@@ -85,23 +83,20 @@ namespace Assets.Scripts.Main
             var type = Engine.DataLibrary.BuildingTypes[typeEnum];
             var prefab = type.Prefab;
             Blueprint = Instantiate(prefab);
-            BlueprintRenderer = Blueprint.GetComponent<MeshRenderer>();
-            BlueprintRenderer.GetPropertyBlock(_propertyBlock);
+            BlueprintRenderers = Blueprint.GetComponent<Building>().Renderers;
         }
 
         private void HideConstructionBlueprint()
         {
             Destroy(Blueprint);
-            BlueprintRenderer = null;
+            BlueprintRenderers.Clear();
         }
 
         private void UpdateBlueprintColor()
         {
-            BlueprintRenderer.GetPropertyBlock(_propertyBlock);
-            var color = _propertyBlock.GetColor("_Color");
-            color = ConstructionIsPossible() ? Color.green : Color.red;
-            _propertyBlock.SetColor("_Color", color);
-            BlueprintRenderer.SetPropertyBlock(_propertyBlock);
+            var color = ConstructionIsPossible() ? Color.green : Color.red;
+            foreach (var renderer in BlueprintRenderers)
+                renderer.material.color = color;
         }
 
         private void UpdateBlueprintPosition()

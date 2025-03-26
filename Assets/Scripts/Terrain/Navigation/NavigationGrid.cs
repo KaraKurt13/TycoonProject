@@ -17,8 +17,6 @@ namespace Assets.Scripts.Terrain.Navigation
             }
             foreach (var node in _nodes)
                 node.Value.InitializeNeighbors(this);
-
-            Debug.Log(_nodes.Count);
         }
 
         public Node GetNode(Vector3Int cell)

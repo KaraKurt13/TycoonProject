@@ -21,6 +21,8 @@ namespace Assets.Scripts.Objects
 
         public List<GameTile> Tiles = new();
 
+        public List<MeshRenderer> Renderers;
+
         public void Initialize()
         {
             if (Type.PropertyTemplate != null)

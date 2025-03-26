@@ -1,3 +1,4 @@
+using Assets.Scripts.Helpers;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Terrain;
 using Assets.Scripts.Terrain.Navigation;
@@ -39,8 +40,10 @@ namespace Assets.Scripts.Main
 
             var buildingCenter = Terrain.GetTilesCenter(centerTile, type, OrientationEnum.E);
             var buildingType = DataLibrary.BuildingTypes[type];
+            var tiles = Terrain.GetOrientationTiles(centerTile, OrientationEnum.E, buildingType.XSize, buildingType.ZSize);
             buildingCenter.y = buildingType.Prefab.transform.position.y;
             var building = Instantiate(buildingType.Prefab, buildingCenter, Quaternion.identity).GetComponent<Building>();
+            building.Tiles = tiles.ToList();
             building.Engine = this;
             building.Type = buildingType;
             centerTile.Building = building;
@@ -69,6 +72,8 @@ namespace Assets.Scripts.Main
             Terrain.Initialize();
             StoreManager.Initialize();
             CreateCustomer(Terrain.GetTile(7, -5));
+            _maxTicksTillAutosave = TimeHelper.SecondsToTicks(30);
+            _ticksTillAutosave = _maxTicksTillAutosave;
         }
 
         private void Update()
@@ -111,7 +116,12 @@ namespace Assets.Scripts.Main
 
         private void FixedUpdate()
         {
-            
+            _ticksTillAutosave--;
+            if (_ticksTillAutosave <= 0)
+            {
+                // autosave
+                _ticksTillAutosave = _maxTicksTillAutosave;
+            }
         }
     }
 }
