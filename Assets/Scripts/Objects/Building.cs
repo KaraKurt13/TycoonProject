@@ -17,6 +17,8 @@ namespace Assets.Scripts.Objects
 
         public BuildingType Type { get; set; }
 
+        public OrientationEnum Orientation;
+
         public BuildingProperty Property;
 
         public GameTile InitialTile;

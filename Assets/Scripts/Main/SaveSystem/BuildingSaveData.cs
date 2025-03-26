@@ -9,6 +9,8 @@ namespace Assets.Scripts.Main.Save
     {
         public BuildingTypeEnum Type;
 
+        public OrientationEnum Orientation;
+
         public Vector3Int CenterTile;
 
         public StorageSaveData StorageSaveData;

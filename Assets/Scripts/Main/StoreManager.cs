@@ -49,12 +49,12 @@ namespace Assets.Scripts.Main
             foreach (var item in Engine.DataLibrary.ItemTypes)
                 SellPrices.Add(item.Key, item.Value.BuyPrice + 2);
 
-            var shelf = Engine.CreateBuilding(Engine.Terrain.GetTile(4,3), BuildingTypeEnum.MediumShelf).Property as ShelfProperty;
+            var shelf = Engine.CreateBuilding(Engine.Terrain.GetTile(4,3), BuildingTypeEnum.MediumShelf, OrientationEnum.E).Property as ShelfProperty;
             shelf.Storage.AddItem(ItemTypeEnum.Sugar, 2);
             shelf.Storage.AddItem(ItemTypeEnum.Salt, 2);
             shelf.Storage.AddItem(ItemTypeEnum.Oil, 1);
-            Engine.CreateBuilding(Engine.Terrain.GetTile(11,3), BuildingTypeEnum.MediumShelf);
-            Engine.CreateBuilding(Engine.Terrain.GetTile(4, -3), BuildingTypeEnum.CashRegister);
+            Engine.CreateBuilding(Engine.Terrain.GetTile(11,3), BuildingTypeEnum.MediumShelf, OrientationEnum.E);
+            Engine.CreateBuilding(Engine.Terrain.GetTile(4, -3), BuildingTypeEnum.CashRegister, OrientationEnum.E);
             AddCurrency(500);
             _maxTicksTillCustomerSpawn = TimeHelper.SecondsToTicks(5f);
             TickTillCustomerRespawn = _maxTicksTillCustomerSpawn;

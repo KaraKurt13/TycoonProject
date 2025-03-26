@@ -37,22 +37,25 @@ namespace Assets.Scripts.Main
 
         [SerializeField] private GameObject _customerPrefab;
 
-        public Building CreateBuilding(GameTile centerTile, BuildingTypeEnum type)
+        public Building CreateBuilding(GameTile centerTile, BuildingTypeEnum type, OrientationEnum orientation)
         {
             if (type == BuildingTypeEnum.None)
                 return null;
 
-            var buildingCenter = Terrain.GetTilesCenter(centerTile, type, OrientationEnum.E);
+            var buildingCenter = Terrain.GetTilesCenter(centerTile, type, orientation);
             var buildingType = DataLibrary.BuildingTypes[type];
-            var tiles = Terrain.GetOrientationTiles(centerTile, OrientationEnum.E, buildingType.XSize, buildingType.ZSize);
+            var tiles = Terrain.GetOrientationTiles(centerTile, orientation, buildingType.XSize, buildingType.ZSize);
             buildingCenter.y = buildingType.Prefab.transform.position.y;
             var building = Instantiate(buildingType.Prefab, buildingCenter, Quaternion.identity).GetComponent<Building>();
-            building.transform.rotation = buildingType.Prefab.transform.rotation;
+            var rotationAngle = GetRotationAngle(orientation);
+            building.transform.eulerAngles = new Vector3(0, rotationAngle, 0);
             building.Tiles = tiles.ToList();
             building.InitialTile = centerTile;
             building.Engine = this;
             building.Type = buildingType;
-            centerTile.Building = building;
+            building.Orientation = orientation;
+            foreach (var tile in tiles)
+                tile.Building = building;
             Buildings.Add(building);
             building.Initialize();
             return building;
@@ -147,6 +150,18 @@ namespace Assets.Scripts.Main
             }
         }
 
+        public int GetRotationAngle(OrientationEnum orientation)
+        {
+            return orientation switch
+            {
+                OrientationEnum.E => 0,
+                OrientationEnum.N => 90,
+                OrientationEnum.W => 180,
+                OrientationEnum.S => 270,
+                _ => 0
+            };
+        }
+
         #region SaveLoad
         public void Save()
         {
@@ -175,7 +190,7 @@ namespace Assets.Scripts.Main
             foreach (var buildingData in data.BuildingsData)
             {
                 var tile = Terrain.GetTile(buildingData.CenterTile.x, buildingData.CenterTile.y);
-                var building = CreateBuilding(tile, buildingData.Type);
+                var building = CreateBuilding(tile, buildingData.Type, buildingData.Orientation);
                 if (building.Property is ShelfProperty shelf)
                 {
                     var storageData = buildingData.StorageSaveData;

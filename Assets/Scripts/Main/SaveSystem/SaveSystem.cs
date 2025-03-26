@@ -49,6 +49,7 @@ namespace Assets.Scripts.Main.Save
                 var data = new BuildingSaveData();
                 data.CenterTile = building.InitialTile.CellPosition;
                 data.Type = building.Type.Type;
+                data.Orientation = building.Orientation;
                 saveData.BuildingsData.Add(data);
                 if (building.Property is ShelfProperty shelf)
                 {
