@@ -35,6 +35,8 @@ namespace Assets.Scripts.Main
 
         public SaveSystem SaveSystem;
 
+        [SerializeField] private GameObject _customerPrefab;
+
         public Building CreateBuilding(GameTile centerTile, BuildingTypeEnum type)
         {
             if (type == BuildingTypeEnum.None)
@@ -55,16 +57,15 @@ namespace Assets.Scripts.Main
             return building;
         }
 
-        [SerializeField] private GameObject _customerPrefab;
-
-        public Customer CreateCustomer(GameTile tile)
+        public Customer CreateCustomer(GameTile tile, bool instantInitialize = true)
         {
             var position = tile.Center;
             position.y = _customerPrefab.transform.position.y;
             var customer = Instantiate(_customerPrefab, position, Quaternion.identity).GetComponent<Customer>();
             customer.Engine = this;
             Customers.Add(customer);
-            customer.Initialize();
+            if (instantInitialize)
+                customer.Initialize();
             return customer;
         }
 
@@ -93,7 +94,7 @@ namespace Assets.Scripts.Main
             CreateCustomer(Terrain.GetTile(7, -5));
             SaveSystem = new(this);
             _maxTicksTillAutosave = TimeHelper.SecondsToTicks(30);
-            _ticksTillAutosave = _maxTicksTillAutosave;
+            TicksTillAutosave = _maxTicksTillAutosave;
         }
 
         private void Update()
@@ -132,15 +133,16 @@ namespace Assets.Scripts.Main
 
         }
 
-        private int _ticksTillAutosave, _maxTicksTillAutosave;
+        public int TicksTillAutosave;
+        private int _maxTicksTillAutosave;
 
         private void FixedUpdate()
         {
-            _ticksTillAutosave--;
-            if (_ticksTillAutosave <= 0)
+            TicksTillAutosave--;
+            if (TicksTillAutosave <= 0)
             {
                 Save();
-                _ticksTillAutosave = _maxTicksTillAutosave;
+                TicksTillAutosave = _maxTicksTillAutosave;
             }
         }
 
@@ -180,6 +182,21 @@ namespace Assets.Scripts.Main
                     shelf.Storage.Items = storageData.Items;
                 }
             }
+
+            foreach (var customerData in data.CustomersData)
+            {
+                var tile = StoreManager.ExitTile;
+                var customer = CreateCustomer(tile, false);
+                var position = new Vector3(customerData.X, customerData.Y, customerData.Z);
+                customer.transform.position = position;
+                customer.PurchasedItems = customerData.PurchasedItems;
+                customer.PurchaseList = customerData.PurchaseList;
+                customer.Satisfaction = customerData.Satisfaction;
+                customer.Initialize(false);
+            }
+
+            TicksTillAutosave = data.TicksTillAutosave;
+            StoreManager.TickTillCustomerRespawn = data.TicksTillCustomerRespawn;
         }
 
         private void ClearCurrentGame()

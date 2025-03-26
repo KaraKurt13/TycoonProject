@@ -11,7 +11,7 @@ namespace Assets.Scripts.Objects.Customers
         private Customer _customer;
         private Engine _engine;
         private ShelfProperty _targetShelf;
-        private int _targetItemIndex = 0, _purchasedItems = 0;
+        private int _targetItemIndex = 0;
         private ItemTypeEnum _targetItem = ItemTypeEnum.None;
         private bool _movingToShelf = false;
 
@@ -48,31 +48,36 @@ namespace Assets.Scripts.Objects.Customers
 
         private void TryGetNextItem()
         {
-            if (_targetItemIndex >= _customer.PurchaseList.Count)
+            while (_targetItemIndex < _customer.PurchaseList.Count)
             {
-                if (_purchasedItems > 0)
-                    _customer.StateMachine.Enter<CustomerPayoffState>();
+                _targetItem = _customer.PurchaseList[_targetItemIndex];
+
+                if (_customer.PurchasedItems.Contains(_targetItem))
+                {
+                    _targetItemIndex++;
+                    continue;
+                }
+
+                _targetShelf = _engine.StoreManager.GetRandomRequiredShelf(_targetItem)?.Property as ShelfProperty;
+
+                if (_targetShelf != null)
+                {
+                    _customer.Agent.SetDestination(_targetShelf.Building.transform.position);
+                    _customer.Satisfaction++;
+                    _movingToShelf = true;
+                    return;
+                }
                 else
-                    _customer.StateMachine.Enter<CustomerLeavingState>();
-
-                return;
+                {
+                    _customer.Satisfaction--;
+                    _targetItemIndex++;
+                }
             }
 
-            _targetItem = _customer.PurchaseList[_targetItemIndex];
-            _targetShelf = _engine.StoreManager.GetRandomRequiredShelf(_targetItem)?.Property as ShelfProperty;
-
-            if (_targetShelf != null)
-            {
-                _customer.Agent.SetDestination(_targetShelf.Building.transform.position);
-                _customer.Satisfaction++;
-                _movingToShelf = true;
-            }
+            if (_customer.PurchasedItems.Count > 0)
+                _customer.StateMachine.Enter<CustomerPayoffState>();
             else
-            {
-                _customer.Satisfaction--;
-                _targetItemIndex++;
-                TryGetNextItem();
-            }
+                _customer.StateMachine.Enter<CustomerLeavingState>();
         }
 
         private void TakeItem()
@@ -80,7 +85,7 @@ namespace Assets.Scripts.Objects.Customers
             _targetShelf.Storage.TakeItem(_targetItem, 1);
             _customer.Storage.AddItem(_targetItem, 1);
             _targetItemIndex++;
-            _purchasedItems++;
+            _customer.PurchasedItems.Add(_targetItem);
             _movingToShelf = false;
 
             TryGetNextItem();

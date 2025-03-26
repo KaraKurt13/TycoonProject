@@ -22,15 +22,17 @@ namespace Assets.Scripts.Main
 
         public GameTile ExitTile;
 
-        private int _ticksTillCustomerSpawn, _maxTicksTillCustomerSpawn;
+        public int TickTillCustomerRespawn;
+
+        private int _maxTicksTillCustomerSpawn;
 
         private void FixedUpdate()
         {
-            _ticksTillCustomerSpawn--;
-            if (_ticksTillCustomerSpawn <= 0)
+            TickTillCustomerRespawn--;
+            if (TickTillCustomerRespawn <= 0)
             {
                 Engine.CreateCustomer(ExitTile);
-                _ticksTillCustomerSpawn = _maxTicksTillCustomerSpawn;
+                TickTillCustomerRespawn = _maxTicksTillCustomerSpawn;
             }
         }
 
@@ -55,7 +57,7 @@ namespace Assets.Scripts.Main
             Engine.CreateBuilding(Engine.Terrain.GetTile(4, -3), BuildingTypeEnum.CashRegister);
             AddCurrency(500);
             _maxTicksTillCustomerSpawn = TimeHelper.SecondsToTicks(5f);
-            _ticksTillCustomerSpawn = _maxTicksTillCustomerSpawn;
+            TickTillCustomerRespawn = _maxTicksTillCustomerSpawn;
         }
 
         public void AddCurrency(int amount)

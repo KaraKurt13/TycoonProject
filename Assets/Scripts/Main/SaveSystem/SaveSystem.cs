@@ -59,6 +59,22 @@ namespace Assets.Scripts.Main.Save
                 }
             }
 
+            foreach (var customer in _engine.Customers)
+            {
+                var data = new CustomerSaveData();
+                var position = customer.transform.position;
+                data.X = position.x;
+                data.Y = position.y;
+                data.Z = position.z;
+                data.Satisfaction = customer.Satisfaction;
+                data.PurchasedItems = customer.PurchasedItems;
+                data.PurchaseList = customer.PurchaseList;
+                saveData.CustomersData.Add(data);
+            }
+
+            saveData.TicksTillAutosave = _engine.TicksTillAutosave;
+            saveData.TicksTillCustomerRespawn = _engine.StoreManager.TickTillCustomerRespawn;
+
             var json = JsonConvert.SerializeObject(saveData);
             File.WriteAllText(_path, json);
             Debug.Log($"Data saved: {_path}");

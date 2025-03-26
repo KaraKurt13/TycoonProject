@@ -53,7 +53,7 @@ namespace Assets.Scripts.Objects.Customers
 
         private void ProcessPayment()
         {
-            var itemTypes = _customer.PurchaseList;
+            var itemTypes = _customer.PurchasedItems;
             var overallCost = itemTypes.Sum(i => _engine.StoreManager.GetItemBuyPrice(i, 1));
             _engine.StoreManager.AddCurrency(overallCost);
             _movingToRegister = false;

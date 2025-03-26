@@ -18,13 +18,16 @@ namespace Assets.Scripts.Objects
 
         public List<ItemTypeEnum> PurchaseList;
 
+        public List<ItemTypeEnum> PurchasedItems = new();
+
         public Storage Storage;
 
         public int Satisfaction = 0;
 
-        public void Initialize()
+        public void Initialize(bool generationRequired = true)
         {
-            GeneratePurchaseList();
+            if (generationRequired)
+                GeneratePurchaseList();
             StateMachine = new CustomerStateMachine(this, Engine);
             StateMachine.Enter<CustomerPurchaseState>();
         }

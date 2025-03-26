@@ -10,6 +10,8 @@ namespace Assets.Scripts.Main.Savesystem
     {
         public int CurrencyAmount, SatisfactionRate;
 
+        public int TicksTillAutosave, TicksTillCustomerRespawn;
+
         public StorageSaveData StoreStorage;
 
         public Dictionary<ItemTypeEnum, int> SellPrices;
