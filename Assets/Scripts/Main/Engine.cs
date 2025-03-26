@@ -57,7 +57,7 @@ namespace Assets.Scripts.Main
 
         [SerializeField] private GameObject _customerPrefab;
 
-        public void CreateCustomer(GameTile tile)
+        public Customer CreateCustomer(GameTile tile)
         {
             var position = tile.Center;
             position.y = _customerPrefab.transform.position.y;
@@ -65,6 +65,7 @@ namespace Assets.Scripts.Main
             customer.Engine = this;
             Customers.Add(customer);
             customer.Initialize();
+            return customer;
         }
 
         public void PauseGame()
@@ -168,10 +169,16 @@ namespace Assets.Scripts.Main
                 }    
             }
 
-            foreach (var building in data.BuildingsData)
+            foreach (var buildingData in data.BuildingsData)
             {
-                var tile = Terrain.GetTile(building.CenterTile.x, building.CenterTile.y);
-                CreateBuilding(tile, building.Type);
+                var tile = Terrain.GetTile(buildingData.CenterTile.x, buildingData.CenterTile.y);
+                var building = CreateBuilding(tile, buildingData.Type);
+                if (building.Property is ShelfProperty shelf)
+                {
+                    var storageData = buildingData.StorageSaveData;
+                    shelf.Storage = new Storage(this, storageData.MaxSlots);
+                    shelf.Storage.Items = storageData.Items;
+                }
             }
         }
 

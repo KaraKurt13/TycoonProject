@@ -1,4 +1,5 @@
 using Assets.Scripts.Main.Savesystem;
+using Assets.Scripts.Objects;
 using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
@@ -49,6 +50,13 @@ namespace Assets.Scripts.Main.Save
                 data.CenterTile = building.InitialTile.CellPosition;
                 data.Type = building.Type.Type;
                 saveData.BuildingsData.Add(data);
+                if (building.Property is ShelfProperty shelf)
+                {
+                    var storageData = new StorageSaveData();
+                    storageData.MaxSlots = shelf.Storage.MaxSlots;
+                    storageData.Items = shelf.Storage.Items;
+                    data.StorageSaveData = storageData;
+                }
             }
 
             var json = JsonConvert.SerializeObject(saveData);

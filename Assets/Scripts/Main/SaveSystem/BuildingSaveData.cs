@@ -10,5 +10,7 @@ namespace Assets.Scripts.Main.Save
         public BuildingTypeEnum Type;
 
         public Vector3Int CenterTile;
+
+        public StorageSaveData StorageSaveData;
     }
 }
