@@ -8,8 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using UnityEngine.WSA;
+using UnityEngine.EventSystems;
 
 namespace Assets.Scripts.Main
 {
@@ -64,6 +63,21 @@ namespace Assets.Scripts.Main
             customer.Initialize();
         }
 
+        public void PauseGame()
+        {
+            Time.timeScale = 0f;
+        }
+
+        public void ResumeGame()
+        {
+            Time.timeScale = 1f;
+        }
+
+        public void ExitGame()
+        {
+            Application.Quit();
+        }
+
         private void Start()
         {
             JsonDataManager.Initialize();
@@ -79,7 +93,7 @@ namespace Assets.Scripts.Main
         private void Update()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (Physics.Raycast(ray, out RaycastHit hit) && !EventSystem.current.IsPointerOverGameObject())
             {
                 if (hit.collider.TryGetComponent<BuildingTerritory>(out var territory))
                 {

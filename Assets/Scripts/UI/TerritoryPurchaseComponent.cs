@@ -38,6 +38,7 @@ namespace Assets.Scripts.UI
         public void Hide()
         {
             _selectedTerritory = null;
+            _purchaseButton.onClick.RemoveAllListeners();
             gameObject.SetActive(false);
         }
 

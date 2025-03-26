@@ -102,7 +102,11 @@ namespace Assets.Scripts.Main
         private void UpdateBlueprintPosition()
         {
             if (Engine.Terrain.GetOrientationTiles(_currentTile, OrientationEnum.E, _selectedBuilding.XSize, _selectedBuilding.ZSize, true).All(t => t != null))
-                Blueprint.transform.position = Engine.Terrain.GetTilesCenter(_currentTile, _selectedBuilding.Type, OrientationEnum.E);
+            {
+                var pos = Engine.Terrain.GetTilesCenter(_currentTile, _selectedBuilding.Type, OrientationEnum.E);
+                var newPos = new Vector3(pos.x, Blueprint.transform.position.y, pos.z);
+                Blueprint.transform.position = newPos;
+            }
         }
 
         private bool ConstructionIsPossible()
